@@ -19,7 +19,7 @@ function App() {
 
  const submitHandler=e=>{
   e.preventDefault();
-    axios.post('http://localhost:5000/api/addnames',{name,work}).then(
+    axios.post('https://mern-project-noag.onrender.com/api/addnames',{name,work}).then(
       res => {
         setname('');
         setwork('');
@@ -30,7 +30,7 @@ function App() {
 
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/allnames').then(
+    axios.get('https://mern-project-noag.onrender.com/api/allnames').then(
       res => setData(res.data)
     )
   }, [])
@@ -52,7 +52,7 @@ function App() {
       </form>
       {
         persons.map((item, index) => (
-        <p key={index}> <b>Task:</b>{item.name} &nbsp; <b>Description:</b>{item.work}  <button onClick={e=>{axios.delete(`http://localhost:5000/api/delete/${item.name}`).then( res => setData(res.data))}} >Delete</button></p>
+        <p key={index}> <b>Task:</b>{item.name} &nbsp; <b>Description:</b>{item.work}  <button onClick={e=>{axios.delete(`https://mern-project-noag.onrender.com/api/delete/${item.name}`).then( res => setData(res.data))}} >Delete</button></p>
         ))
       }
 
