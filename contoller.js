@@ -10,15 +10,11 @@ const read =async(req,res)=>{
 
 const deleted=async(req,res)=>{
     await nameSchema.deleteMany({name:req.params.name})
-        const data = await nameSchema.find()
-     res.send(data)
 }
 
 const update=async(req,res)=>{
         const {work} = req.body;
         await nameSchema.updateOne({name:req.params.name},{$set:{work:work}})
-        const data = await nameSchema.find()
-        res.send(data)
 }
 
 const create=async(req,res)=>{
@@ -29,8 +25,6 @@ const create=async(req,res)=>{
                name,work
            })
            await newData.save()
-           const data = await nameSchema.find();
-           res.json(data)
 }
 
 exports.create = create;
