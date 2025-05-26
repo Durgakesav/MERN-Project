@@ -37,7 +37,7 @@ function App() {
 
   return (
     <>
-      <h1>Welcome to Task List APP(First Deployed app)</h1>
+      <h1>Welcome to Task List App</h1>
       <h2>Add New Tasks</h2>
       <form onSubmit={submitHandler}>
     
