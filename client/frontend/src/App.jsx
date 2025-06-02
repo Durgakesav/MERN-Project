@@ -3,8 +3,23 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import axios from 'axios'
 import './App.css'
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Pagination from 'react-bootstrap/Pagination';
+
 
 function App() {
+  let active = 2;
+let items = [];
+for (let number = 1; number <= 5; number++) {
+  items.push(
+    <Pagination.Item key={number} active={number === active}>
+      {number}
+    </Pagination.Item>,
+  );
+}
+
   const [persons, setData] = useState([])
   const [name,setname] = useState('');
   const [work,setwork] = useState('');
@@ -19,7 +34,7 @@ function App() {
 
  const submitHandler=e=>{
   e.preventDefault();
-    axios.post('https://mern-project-noag.onrender.com/api/addnames',{name,work}).then(
+    axios.post('http://localhost:5000/api/addnames',{name,work}).then(
       res => {
         setname('');
         setwork('');
@@ -30,7 +45,7 @@ function App() {
 
 
   useEffect(() => {
-    axios.get('https://mern-project-noag.onrender.com/api/allnames').then(
+    axios.get('http://localhost:5000/api/allnames').then(
       res => setData(res.data)
     )
   }, [])
@@ -39,23 +54,24 @@ function App() {
     <>
       <h1>Welcome to Task List App</h1>
       <h2>Add New Tasks</h2>
-      <form onSubmit={submitHandler}>
-    
-
-      <input type = "text" name="name" value={name} onChange={changeHandlern} placeholder='Task' />
+      <br></br><br></br>
+      <FloatingLabel>
+      <Form onSubmit={submitHandler}>
+      <Form.Control  name="name" value={name} onChange={changeHandlern} placeholder='Task'  required/>
       <br></br>
-     <input type = "text" name="work" value={work} onChange={changeHandlerw} placeholder='Description' />
+      <Form.Control name = "work" value={work} onChange={changeHandlerw} placeholder='Description' required/>
      <br></br>
      <br></br>
 
-        <button type = "submit" >Submit</button>
-      </form>
+      <Button variant="primary"  size="lg" type = "submit">Submit</Button>
+      </Form>
+      </FloatingLabel>
+      <br></br><br></br>
       {
         persons.map((item, index) => (
-        <p key={index}> <b>Task:</b>{item.name} &nbsp; <b>Description:</b>{item.work}  <button onClick={e=>{axios.delete(`https://mern-project-noag.onrender.com/api/delete/${item.name}`).then( res => setData(res.data))}} >Delete</button></p>
+        <p key={index}> <b>Task:</b>{item.name} &nbsp; <b>Description:</b>{item.work}  <Button  variant="danger" size="lg" onClick={e=>{axios.delete(`http://localhost:5000/api/delete/${item.name}`).then( res => setData(res.data))}} >Delete</Button></p>
         ))
       }
-
 <p>&copy; {new Date().getFullYear()} Task List All rights reserved.</p>
     </>
   )
