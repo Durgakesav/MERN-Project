@@ -1,64 +1,48 @@
-import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import axios from 'axios'
-import './App.css'
+// App.jsx
 
-function App() {
-  const [persons, setData] = useState([])
-  const [name,setname] = useState('');
-  const [work,setwork] = useState('');
-  const changeHandlern=e=>{
-    setname(e.target.value);
-  }
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Home from './Home';
+import Signup from './Signup';
+import Login from './Login';
+import Taskboard from './Taskboard';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
- const changeHandlerw=e=>{
-    setwork(e.target.value);
-  }
+import { useEffect, useState } from 'react';
 
-
- const submitHandler=e=>{
-  e.preventDefault();
-    axios.post('http://localhost:5000/api/addnames',{name,work}).then(
-      res => {
-        setname('');
-        setwork('');
-        setData(res.data)
-      }
-    ).catch((err)=>console.log(err))
-  }
-
+function RootRedirect() {
+  const [redirectPath, setRedirectPath] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/allnames').then(
-      res => setData(res.data)
-    )
-  }, [])
+    const token = localStorage.getItem('token');
+    const userID = localStorage.getItem('userID');
 
+    if (token && userID) {
+      setRedirectPath(`/TaskBoard/${userID}`);
+    } else {
+      setRedirectPath('/Home');
+    }
+  }, []);
+
+  if (redirectPath === null) return <p>Checking authentication...</p>;
+  return <Navigate to={redirectPath} />;
+}
+
+function App() {
   return (
     <>
-      <h1>Welcome to Task List App</h1>
-      <h2>Add New Tasks</h2>
-      <form onSubmit={submitHandler}>
+    <Router>
+      <Routes>
+        <Route path="/" element={<RootRedirect />} />
+        <Route path="/Home" element={<Home />} />
+        <Route path="/Signup" element={<Signup />} />
+        <Route path="/Login" element={<Login />} />
+        <Route path="/Taskboard/:id" element={<Taskboard />} />
+      </Routes>
+    </Router>
+
     
-
-      <input type = "text" name="name" value={name} onChange={changeHandlern} placeholder='Task' />
-      <br></br>
-     <input type = "text" name="work" value={work} onChange={changeHandlerw} placeholder='Description' />
-     <br></br>
-     <br></br>
-
-        <button type = "submit" >Submit</button>
-      </form>
-      {
-        persons.map((item, index) => (
-        <p key={index}> <b>Task:</b>{item.name} &nbsp; <b>Description:</b>{item.work}  <button onClick={e=>{axios.delete(`http://localhost:5000/api/delete/${item.name}`).then( res => setData(res.data))}} >Delete</button></p>
-        ))
-      }
-
-<p>&copy; {new Date().getFullYear()} Task List All rights reserved.</p>
     </>
-  )
+  );
 }
 
 export default App;
